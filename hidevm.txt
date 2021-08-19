@@ -1,0 +1,59 @@
+IN HOST OS:
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSVendor"        "AMTBios"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSVersion"       "3.41"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseDate"   "1/2014"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseMajor"  1
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseMinor"  2
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSFirmwareMajor" 1
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSFirmwareMinor" 2
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiSystemVendor"      "LENOVO"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiSystemProduct"     "G580"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiSystemVersion"     "V3"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiSystemSerial"      "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiSystemSKU"         "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiSystemFamily"      "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiSystemUuid"        "00000000-0000-0000-0000-000000000000"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBoardVendor"       "LENOVO"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBoardProduct"      "G580"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBoardVersion"      "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBoardSerial"       "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBoardAssetTag"     "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBoardLocInChass"   "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiBoardBoardType"    10
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiChassisVendor"     "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiChassisType"       3
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiChassisVersion"    "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiChassisSerial"     "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiChassisAssetTag"   "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiProcManufacturer"  "MT.com"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiProcVersion"       "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiOEMVBoxVer"        "EMPTY"
+VBoxManage setextradata "scamwin10" "VBoxInternal/Devices/pcbios/0/Config/DmiOEMVBoxRev"        "EMPTY"
+
+IN QUEST WIN10:
+Install "quest additions"
+
+Search for the following 4 GUIDs from HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum:
+{4d36e967-e325-11ce-bfc1-08002be10318} (hdd. Change "Virtual box hdd" to "SamsungEVO320HDD")
+{4d36e968-e325-11ce-bfc1-08002be10318} (display driver. change in "oem3.inf") 
+{4d36e965-e325-11ce-bfc1-08002be10318} (cd-rom. remove entirely from host ui)
+
+In "C:\Windows\INF\oem2.inf" change "General Dist Driver Virtual Quest" to "Common Driver Assist"
+In "C:\Windows\INF\oem3.inf" change
+	"VirtualBox Graphics Adapter (WDDM)" to "IntelHD Graphics"
+	"VirtualBox Video Driver Disk" to "IntelHD Setup Media"
+	"Oracle Corporation" to "Intel"
+
+Change programs install dates:
+(32bit)-HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall
+(64bit)-HKEY_LOCAL_MACHINE\SOFTWARE\Wow64Node\Microsoft\Windows\CurrentVersion\Uninstall
+-in the right pane double click on InstallDate (If its not there: right click empty space, choose new > String Value, call it InstallDate)
+-change the date (format 11112233 -> 1=year, 2=month, 3=day)
+
+systeminfo | find "Original Install Date"
+
+Hide quest additions tray icon:
+taskkill /f vboxtray.exe
+and
+remove "virtualbox tray" from "startup applications" 
+
